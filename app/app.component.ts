@@ -16,4 +16,4 @@ export class App {
   constructor(private configuration:ConfigService) {}
 }
 
-bootstrap(App, [ConfigService]);
+
