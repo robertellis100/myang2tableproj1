@@ -1,5 +1,5 @@
-** Use ng2-easy-table with angular2 QuickStart
-Currently results in errors.** See [ng2-easy-table issue 28](https://github.com/ssuperczynski/ng2-easy-table/issues/28)
+## ** Use ng2-easy-table with angular2 QuickStart **
+** Currently results in errors. ** See [ng2-easy-table issue 28](https://github.com/ssuperczynski/ng2-easy-table/issues/28)
 
 ** Follow these six steps to start: **
 * Clone [angular2 quickstart](https://github.com/angular/quickstart/blob/master/README.md)
@@ -15,7 +15,8 @@ Currently results in errors.** See [ng2-easy-table issue 28](https://github.com/
 * Add/edit the following two files in the root of the project:
   + index.html
   + systemsj.config.js
-  
+
+** See more instructions on cloning the QuickStart and the files to add/edit below.**  
 
 ## Create a new project based on the QuickStart
 
