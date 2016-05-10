@@ -1,15 +1,21 @@
-# Angular 2 QuickStart Source
+** Use ng2-easy-table with angular2 QuickStart
+Currently results in errors.** See [ng2-easy-table issue 28](https://github.com/ssuperczynski/ng2-easy-table/issues/28)
 
-This repository holds the TypeScript source code of the [angular.io quickstart](https://angular.io/docs/ts/latest/quickstart.html),
-the foundation for most of the documentation samples and potentially a good starting point for your application.
-
-It's been extended with testing support so you can start writing tests immediately.
-
-**This is not the perfect arrangement for your application. It is not designed for production. 
-It exists primarily to get you started quickly with learning and prototyping in Angular 2**
-
-We are unlikely to accept suggestions about how to grow this QuickStart into something it is not.
-Please keep that in mind before posting issues and PRs.
+** Follow these six steps to start: **
+* Clone [angular2 quickstart](https://github.com/angular/quickstart/blob/master/README.md)
+* Add 'ng2-easy-table' to dependencies within package.json in the root of the project
+![addtodependecies](https://cloud.githubusercontent.com/assets/13954708/15130055/0ad044da-1603-11e6-9bc2-18be95e0aeca.png)
+* Run '_npm install_'
+* Add/edit the following files:
+  - app/app.component.ts
+  - app/app.config-service.ts
+  - app/data.json
+  - main.ts
+* Run '_npm start_'
+* Add/edit the following two files in the root of the project:
+  + index.html
+  + systemsj.config.js
+  
 
 ## Create a new project based on the QuickStart
 
@@ -19,30 +25,12 @@ git clone  https://github.com/angular/quickstart  my-proj
 cd my-proj
 ```
 
-We have no intention of updating the source on `angular/quickstart`.
+They have no intention of updating the source on `angular/quickstart`.
 Discard everything "git-like" by deleting the `.git` folder.
 ```bash
 rm -rf .git
 ```
 
-### Create a new git repo
-You could [start writing code](#start-development) now and throw it all away when you're done.
-If you'd rather preserve your work under source control, consider taking the following steps.
-
-Initialize this project as a *local git repo* and make the first commit:
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-```
-
-Create a *remote repository* for this project on the service of your choice.
-
-Grab its address (e.g. *`https://github.com/<my-org>/my-proj.git`*) and push the *local repo* to the *remote*.
-```bash
-git remote add origin <repo-address>
-git push -u origin master
-```
 ## Install npm packages
 
 Install the npm packages described in the `package.json` and verify that it works:
@@ -62,76 +50,150 @@ Shut it down manually with Ctrl-C.
 
 You're ready to write your application.
 
-### npm scripts
+**app.component.ts**
+``` typescript
+///<reference path="./../typings/browser/ambient/es6-shim/index.d.ts"/>
+import {Component}     from '@angular/core';
+import {bootstrap}     from '@angular/platform-browser-dynamic';
+import {AppComponent}  from 'ng2-easy-table/app/app.component';
+import {ConfigService} from "./config-service";
 
-We've captured many of the most useful commands in npm scripts defined in the `package.json`:
+@Component({
+  selector: 'app',
+  directives: [AppComponent],
+  providers: [ConfigService],
+  template: ` <h3> My use of ng2-easy-table </h3>
+    <ng2-table [configuration]="configuration"></ng2-table>
+  `
+})
+export class App {
+  constructor(private configuration:ConfigService) {}
+}
 
-* `npm start` - runs the compiler and a server at the same time, both in "watch mode".
-* `npm run tsc` - runs the TypeScript compiler once.
-* `npm run tsc:w` - runs the TypeScript compiler in watch mode; the process keeps running, awaiting changes to TypeScript files and re-compiling when it sees them.
-* `npm run lite` - runs the [lite-server](https://www.npmjs.com/package/lite-server), a light-weight, static file server, written and maintained by
-[John Papa](https://github.com/johnpapa) and
-[Christopher Martin](https://github.com/cgmartin)
-with excellent support for Angular apps that use routing.
-* `npm run typings` - runs the typings tool.
-* `npm run postinstall` - called by *npm* automatically *after* it successfully completes package installation. This script installs the TypeScript definition files this app requires.
+bootstrap(App, [ConfigService]);
+```
+**config-service.ts**
+```typescript
+import {Injectable} from "@angular/core";
+@Injectable()
+export class ConfigService {
+  public searchEnabled = false;
+  public orderEnabled = true;
+  public globalSearchEnabled = false;
+  public footerEnabled = false;
+  public paginationEnabled = false;
+  public exportEnabled = false;
+  public editEnabled = false;
+  public resourceUrl = "app/data.json";
+  public rows = 10;
+}
+```
+**data.json**
+``` json
+{
+    "Name": "Dinner With Bernard",
+    "Author": "Lola",
+    "Guest List": [
+        {"Company": "Amazonia", "MarketCap": "5,000,000", "PotluckItem": "drinks"},
+        {"Company": "eBayaria", "MarketCap": "20,000,000", "PotluckItem": "desserts"},
+        {"Company": "Softmicrosia", "MarketCap": "60,000,000", "PotluckItem": "fruit salads"},
+        {"Company": "Ogler", "MarketCap": "6,000,000", "PotluckItem": "chips"},
+        {"Company": "EggTorso", "MarketCap": "60,000,000", "PotluckItem": "egg salads"},
+        {"Company": "Awchoo", "MarketCap": "100,000,000", "PotluckItem": "green salads"}
+    ]
+}
+```
+**main.ts**
+``` typescript
+import {bootstrap}    from '@angular/platform-browser-dynamic';
+import {App} from './app.component';
 
-Here are the test related scripts:
-* `npm test` - compiles, runs and watches the karma unit tests
-* `npm run webdriver:update` - ONE TIME update for protractor end-to-end (e2e) tests
-* `npm run e2e` - run protractor e2e tests, written in JavaScript (*e2e-spec.js)
+bootstrap(App);
+```
+**index.html**
+``` html
+<html>
+  <head>
+    <title>Angular 2 QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
 
-## Testing
+    <!-- Polyfill(s) for older browsers -->
+    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
 
-The QuickStart documentation doesn't discuss testing. 
-This repo adds both karma/jasmine unit test and protractor end-to-end testing support.
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
 
-These tools are configured for specific conventions described below.
+    <script src="systemjs.config.js"></script>
+    <script>
+      System.import('app').catch(function(err){ console.error(err);  });
+    </script>
+    <script>
+    System.import('dist/app/index.component').catch(function (err) {
+      console.error(err);
+    });
+    </script>
+  </head>
 
-*It is unwise and rarely possible to run the application, the unit tests, and the e2e tests at the same time.
-We recommend that you shut down one before starting another.*
+  <body>
+    <my-app>Loading...</my-app>
+  </body>
+</html>
+```
+**systemsj.config.js**
+``` javascript
+(function(global) {
 
-### Unit Tests
-TypeScript unit-tests are usually in the `app` folder. Their filenames must end in `.spec`.
+  // map tells the System loader where to look for things
+  var map = {
+    'app':                        'app', // 'dist',
+    'rxjs':                       'node_modules/rxjs',
+    'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
+    '@angular':                   'node_modules/@angular',
+    'ng2-easy-table':             'node_modules/ng2-easy-table/dist'
+  };
 
-Look for the example `app/app.component.spec.ts`.
-Add more `.spec.ts` files as you wish; we configured karma to find them.
+  // packages tells the System loader how to load
+  // when no filename and/or no extension
+  var packages = {
+    'app':                        { main: 'index.component.js',  defaultExtension: 'js' },
+    'rxjs':                       { defaultExtension: 'js' },
+    'angular2-in-memory-web-api': { defaultExtension: 'js' },
+    'ng2-easy-table':             { format: 'register', defaultExtension: 'js' },
+     dist:                        { format: 'register', defaultExtension: 'js' }
+  };
 
-Run it with `npm test`
+  var packageNames = [
+    '@angular/common',
+    '@angular/compiler',
+    '@angular/core',
+    '@angular/http',
+    '@angular/platform-browser',
+    '@angular/platform-browser-dynamic',
+    '@angular/router',
+    '@angular/router-deprecated',
+    '@angular/testing',
+    '@angular/upgrade'
+  ];
 
-That command first compiles the application, then simultaneously re-compiles and runs the karma test-runner.
-Both the compiler and the karma watch for (different) file changes.
+  // add package entries for angular packages in the form
+  // '@angular/common': { main: 'index.js', defaultExtension: 'js' }
+  packageNames.forEach(function(pkgName) {
+    packages[pkgName] = { main: 'index.js', defaultExtension: 'js' };
+  });
 
-Shut it down manually with Ctrl-C.
+  var config = {
+    map: map,
+    packages: packages
+  };
 
-Test-runner output appears in the terminal window.
-We can update our app and our tests in real-time, keeping a weather eye on the console for broken tests.
-Karma is occasionally confused and it is often necessary to shut down its browser or even shut the command down (Ctrl-C) and
-restart it. No worries; it's pretty quick.
+  // filterSystemConfig - index.html's chance
+  // to modify config before we register it.
+  if (global.filterSystemConfig) { global.filterSystemConfig(config); }
 
-The `HTML-Reporter` is also wired in. That produces a prettier output; look for it in `~_test-output/tests.html`.
+  System.config(config);
 
-### End-to-end (E2E) Tests
-
-**BEFORE RUNNING THE FIRST TEST** you must update the Selenium webdriver. Run `npm run webdriver:update`.
-
-E2E tests are usually at the project root, above the `app` folder. 
-Their filenames must end in `e2e-spec.js`.
-
-E2E tests must be written in JavaScript (the author has not figured out how to write them in TS yet).
-
-Look for the example `e2e-spec.ts` in the root folder.
-Add more `e2e-spec.js` files as you wish (although one usually suffices for small projects); 
-we configured protractor to find them.
-
-
-Thereafter, run them with `npm run e2e`.
-
-That command first compiles, then simultaneously starts the Http-Server at `localhost:8080`
-and launches protractor.  
-
-The pass/fail test results appear at the bottom of the terminal window.
-A custom reporter (see `protractor.config.js`) generates a  `./protractor-results.txt` file 
-which is easier to read; this file is excluded from source control.
-
-Shut it down manually with Ctrl-C.
+})(this);
+```
